@@ -10,7 +10,7 @@ $host = 'roundhouse.proxy.rlwy.net';
 $dbname = 'railway';
 $username = 'root';
 $password = 'swfDsQzVUPpWYATaWGWYIaCqfpltgipo';
-$port = 19474;
+
 
 // Email sending parameters
 $fromEmail = 'satishchau2002@gmail.com'; // Sender's email address
@@ -21,7 +21,7 @@ $mail = new PHPMailer(true); // Passing true enables exceptions
 
 try {
     // Connect to the database
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password,$port);
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     if (isset($_POST['submit'])) {
