@@ -1,6 +1,6 @@
 <?php
 // Connect to your database (assuming using PDO)
-$pdo = new PDO('mysql:host=localhost;dbname=customemail', 'root', '');
+$pdo = new PDO('mysql:host=roundhouse.proxy.rlwy.net;dbname=railway', 'root', 'swfDsQzVUPpWYATaWGWYIaCqfpltgipo');
 
 // Handle form submission
 if (isset($_POST['submit'])) {

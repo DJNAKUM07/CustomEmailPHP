@@ -6,10 +6,10 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 // Database connection parameters
-$host = 'localhost';
-$dbname = 'customemail';
+$host = 'roundhouse.proxy.rlwy.net';
+$dbname = 'railway';
 $username = 'root';
-$password = '';
+$password = 'swfDsQzVUPpWYATaWGWYIaCqfpltgipo';
 
 // Email sending parameters
 $fromEmail = 'satishchau2002@gmail.com'; // Sender's email address
