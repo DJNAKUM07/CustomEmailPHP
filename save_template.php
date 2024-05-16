@@ -6,6 +6,10 @@
 </head>
 <body>
     <h2>Save Email Template</h2>
+    <!-- Button to redirect to "Add new Template" page -->
+    <a href="save_template.php" style="text-decoration: none;">
+        <button>Add New Template</button>
+    </a>
     <form action="save_template_process.php" method="post" enctype="multipart/form-data">
         Template Name: <input type="text" name="template_name" required><br><br>
         Subject: <input type="text" name="subject" required><br><br>
