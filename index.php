@@ -5,6 +5,10 @@
 </head>
 <body>
     <h2>Select Email Template and Enter Recipient</h2>
+      <!-- Button to redirect to "Add new Template" page -->
+      <a href="save_template.php" style="text-decoration: none;">
+        <button>Add New Template</button>
+    </a>
     <form action="send_email_process.php" method="post">
         <label for="template">Choose a template:</label>
         <select name="template" required>
