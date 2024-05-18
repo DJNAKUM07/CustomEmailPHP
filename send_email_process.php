@@ -5,30 +5,18 @@ require 'vendor/autoload.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-// Database connection parameters
-$host = 'roundhouse.proxy.rlwy.net';
-$dbname = 'railway';
-$username = 'root';
-$password = 'swfDsQzVUPpWYATaWGWYIaCqfpltgipo';
-
-
-// Email sending parameters
-$fromEmail = 'satishchau2002@gmail.com'; // Sender's email address
-$fromName = 'Sahil Chau'; // Sender's name
-
 // Initialize PHPMailer
 $mail = new PHPMailer(true); // Passing true enables exceptions
 
 try {
     // Connect to the database
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    include 'db_connection.php';
 
     if (isset($_POST['submit'])) {
         $templateId = $_POST['template'];
         $recipientEmail = $_POST['recipient_email'];
 
-        // Fetch selected template from database
+        // Fetch selected template from the database
         $stmt = $pdo->prepare("SELECT * FROM email_templates WHERE id = ?");
         $stmt->execute([$templateId]);
         $template = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -38,30 +26,38 @@ try {
             $body = $template['body'];
             $imagePath = $template['image_path'];
 
-            // Set SMTP settings for Gmail SMTP
-            $mail->isSMTP();
-            $mail->Host = 'smtp.gmail.com';
-            $mail->SMTPAuth = true;
-            $mail->Username = 'satishchau2002@gmail.com'; // Your Gmail address
-            $mail->Password = 'llblttzdrjltjnre'; // Your Gmail password
-            $mail->SMTPSecure = 'ssl';
-            $mail->Port = 465;
+            // Fetch email credentials from the database
+            $stmt = $pdo->query("SELECT * FROM credentials");
+            $credentials = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            // Email content
-            $mail->setFrom($fromEmail, $fromName);
-            $mail->addAddress($recipientEmail);
-            $mail->Subject = $subject;
-            $mail->isHTML(true);
-            $mail->Body = $body;
+            if ($credentials) {
+                // Set SMTP settings
+                $mail->isSMTP();
+                $mail->Host = $credentials['smtp_host'];
+                $mail->SMTPAuth = true;
+                $mail->Username = $credentials['username'];
+                $mail->Password = $credentials['password'];
+                $mail->SMTPSecure = 'ssl';
+                $mail->Port = $credentials['smtp_port'];
 
-            // Attach image if available
-            if ($imagePath && file_exists($imagePath)) {
-                $mail->addAttachment($imagePath, $imagePath);
+                // Email content
+                $mail->setFrom($credentials['sender_email'], $credentials['sender_name']);
+                $mail->addAddress($recipientEmail);
+                $mail->Subject = $subject;
+                $mail->isHTML(true);
+                $mail->Body = $body;
+
+                // Attach image if available
+                if ($imagePath && file_exists($imagePath)) {
+                    $mail->addAttachment($imagePath, $imagePath);
+                }
+
+                // Send email
+                $mail->send();
+                echo "Email sent successfully!";
+            } else {
+                echo "Email credentials not found!";
             }
-
-            // Send email
-            $mail->send();
-            echo "Email sent successfully!";
         } else {
             echo "Template not found!";
         }
@@ -70,5 +66,21 @@ try {
     echo "Database Error: " . $e->getMessage();
 } catch (Exception $e) {
     echo "Email sending failed: " . $mail->ErrorInfo;
+}
+
+// After sending the email successfully
+// Insert email log into the database
+try {
+    // Prepare SQL statement to insert into email_logs table
+    $stmt = $pdo->prepare("INSERT INTO email_logs (recipient_email, subject, body) VALUES (?, ?, ?)");
+    // Bind parameters
+    $stmt->bindParam(1, $recipientEmail);
+    $stmt->bindParam(2, $subject);
+    $stmt->bindParam(3, $body);
+    // Execute the statement
+    $stmt->execute();
+} catch (PDOException $e) {
+    // Handle the exception if insertion fails
+    echo "Error inserting email log: " . $e->getMessage();
 }
 ?>

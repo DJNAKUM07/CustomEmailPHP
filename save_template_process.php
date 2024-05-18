@@ -1,6 +1,6 @@
 <?php
 // Connect to your database (assuming using PDO)
-$pdo = new PDO('mysql:host=roundhouse.proxy.rlwy.net;dbname=railway', 'root', 'swfDsQzVUPpWYATaWGWYIaCqfpltgipo');
+include 'db_connection.php';
 
 // Handle form submission
 if (isset($_POST['submit'])) {
