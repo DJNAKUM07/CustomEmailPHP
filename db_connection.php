@@ -1,9 +1,9 @@
 <?php
 // Database connection parameters
-$host = 'localhost';
-$dbname = 'customemail';
+$host = 'roundhouse.proxy.rlwy.net';
+$dbname = 'railway';
 $username = 'root';
-$password = '';
+$password = 'swfDsQzVUPpWYATaWGWYIaCqfpltgipo';
 
 try {
     // Connect to the database
