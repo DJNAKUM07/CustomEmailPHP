@@ -26,10 +26,51 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['id'])) {
     <title>Edit Email Credential</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bootstrap.min.css">
+
 </head>
 <body>
-    <div class="container mt-5">
-        <h2>Edit Email Credential</h2>
+
+
+        <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#"></a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.php">Template
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="list_credentials.php">Credentials
+                            <span class="visually-hidden">(current)</span>
+
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="send_email.php">Send Email</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="email_log_list.php">Email Log</a>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+        </nav>
+ 
+    <div class="m-5">
+    <div class="row">
+            <div class="col-md-10">
+                <h2>Edit Email Credential</h2>
+            </div>
+            <div class="col-md-2">
+                <a href="list_credentials.php" class="btn btn-primary mb-3">Back to Credential List</a>
+            </div>
+        </div>
         <form action="update_credential.php" method="post">
             <div class="form-group">
                 <input type="hidden" name="id" value="<?php echo $credential['id']; ?>">

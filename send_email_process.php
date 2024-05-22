@@ -24,7 +24,6 @@ try {
         if ($template) {
             $subject = $template['subject'];
             $body = $template['body'];
-            $imagePath = $template['image_path'];
 
             // Fetch email credentials from the database
             $stmt = $pdo->query("SELECT * FROM credentials");
@@ -45,42 +44,49 @@ try {
                 $mail->addAddress($recipientEmail);
                 $mail->Subject = $subject;
                 $mail->isHTML(true);
-                $mail->Body = $body;
 
-                // Attach image if available
-                if ($imagePath && file_exists($imagePath)) {
-                    $mail->addAttachment($imagePath, $imagePath);
-                }
+                // Add the body content with image
+                $mail->Body = $body;
 
                 // Send email
                 $mail->send();
-                echo "Email sent successfully!";
+
+                 // Insert email log into the database
+                 try {
+                    // Prepare SQL statement to insert into email_logs table
+                    $stmt = $pdo->prepare("INSERT INTO email_logs (recipient_email, subject, body) VALUES (?, ?, ?)");
+                    // Bind parameters
+                    $stmt->bindParam(1, $recipientEmail);
+                    $stmt->bindParam(2, $subject);
+                    $stmt->bindParam(3, $body);
+                    // Execute the statement
+                    $stmt->execute();
+                } catch (PDOException $e) {
+                    // Handle the exception if insertion fails
+                    echo "Error inserting email log: " . $e->getMessage();
+                }
+
+                // Redirect to Send Email page with success message
+                header("Location: send_email.php?success=1");
+                exit;
             } else {
-                echo "Email credentials not found!";
+                // Redirect to Send Email page with error message
+                header("Location: send_email.php?error=1");
+                exit;
             }
         } else {
-            echo "Template not found!";
+            // Redirect to Send Email page with error message
+            header("Location: send_email.php?error=1");
+            exit;
         }
     }
 } catch (PDOException $e) {
-    echo "Database Error: " . $e->getMessage();
+    // Redirect to Send Email page with error message
+    header("Location: send_email.php?error=1");
+    exit;
 } catch (Exception $e) {
-    echo "Email sending failed: " . $mail->ErrorInfo;
-}
-
-// After sending the email successfully
-// Insert email log into the database
-try {
-    // Prepare SQL statement to insert into email_logs table
-    $stmt = $pdo->prepare("INSERT INTO email_logs (recipient_email, subject, body) VALUES (?, ?, ?)");
-    // Bind parameters
-    $stmt->bindParam(1, $recipientEmail);
-    $stmt->bindParam(2, $subject);
-    $stmt->bindParam(3, $body);
-    // Execute the statement
-    $stmt->execute();
-} catch (PDOException $e) {
-    // Handle the exception if insertion fails
-    echo "Error inserting email log: " . $e->getMessage();
+    // Redirect to Send Email page with error message
+    header("Location: send_email.php?error=1");
+    exit;
 }
 ?>

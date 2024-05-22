@@ -8,30 +8,63 @@ include 'auth.php'; // Include the isLoggedIn() function
 <head>
     <title>Email Credentials List</title>
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bootstrap.min.css">
+     <!-- Option 1: Include in HTML -->
+     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> -->
 </head>
 <body>
-    <div class="container mt-5">
-    <div class="row">
-            <div class="col-md-8">
-            <h2>Email Credentials List</h2>
+
+        <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#"></a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link " href="index.php">Template
+                                
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="list_credentials.php">Credentials
+                            <span class="visually-hidden">(current)</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="send_email.php">Send Email</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="email_log_list.php">Email Log</a>
+                        </li>
+                    </ul>
+
+                </div>
             </div>
-            <div class="col-md-4">
-            <a href="index.php" class="btn btn-primary">Template List</a>
-            <a href="add_credential.php" class="btn btn-primary">Add Credentials</a>
+        </nav>
+
+    <div class="m-5">
+    <div class="row">
+            <div class="col-md-10">
+            <h2>Email Credentials</h2>
+            </div>
+            <div class="col-md-2">
+            <a href="add_credential.php" class="btn btn-success">Add New Credential</a>
             </div>
         </div>
        
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th>SMTP Host</th>
-                    <th>SMTP Port</th>
+                    <!-- <th>SMTP Host</th>
+                    <th>SMTP Port</th> -->
                     <th>Username</th>
                     <th>Password</th>
                     <th>Sender Name</th>
                     <th>Sender Email</th>
-                    <th>Actions</th> <!-- New column for action buttons -->
+                    <th class="text-center">Actions</th> <!-- New column for action buttons -->
                 </tr>
             </thead>
             <tbody>
@@ -39,18 +72,19 @@ include 'auth.php'; // Include the isLoggedIn() function
                 include 'read_credentials.php';
                 foreach ($credentials as $credential) {
                     echo '<tr>';
-                    echo '<td>' . $credential['smtp_host'] . '</td>';
-                    echo '<td>' . $credential['smtp_port'] . '</td>';
+                    // echo '<td>' . $credential['smtp_host'] . '</td>';
+                    // echo '<td>' . $credential['smtp_port'] . '</td>';
                     echo '<td>' . $credential['username'] . '</td>';
                     echo '<td>' . $credential['password'] . '</td>';
                     echo '<td>' . $credential['sender_name'] . '</td>';
                     echo '<td>' . $credential['sender_email'] . '</td>';
+                    echo '<td class="text-center"> <button type="button" class="btn btn-secondary " data-toggle="modal" data-target="#viewModal' . $credential['id'] . '"><i class="bi bi-file-earmark-fill"></i></button>';
                     // Edit button linking to edit_credential.php with ID parameter
-                    echo '<td><a href="edit_credential.php?id=' . $credential['id'] . '" class="btn btn-primary btn-sm">Edit</a>';
+                    echo '  <a href="edit_credential.php?id=' . $credential['id'] . '" class="btn btn-primary "><i class="bi bi-pencil-square"></i></a>';
                     // Delete button linking to delete_credential.php with ID parameter
-                    echo '  <button class="btn btn-danger btn-sm delete_credential" data-id="' . $credential['id'] . '">Delete</button>';
+                    echo '  <button class="btn btn-danger  delete_credential" data-id="' . $credential['id'] . '"><i class="bi bi-trash"></i></button>';
                     // View button to open modal
-                    echo ' <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#viewModal' . $credential['id'] . '">View</button>';
+                    
                     echo '</td>';
                     echo '</tr>';
                     
