@@ -24,6 +24,8 @@ try {
         if ($template) {
             $subject = $template['subject'];
             $body = $template['body'];
+            $attachmentPath = $template['image_path'];
+            
 
             // Fetch email credentials from the database
             $stmt = $pdo->query("SELECT * FROM credentials");
@@ -47,6 +49,14 @@ try {
 
                 // Add the body content with image
                 $mail->Body = $body;
+                // Check if attachment path exists
+                if (file_exists($attachmentPath)) {
+                    // Add attachment
+                    $mail->addAttachment($attachmentPath);
+                } else {
+                    // Handle error if attachment file does not exist
+                    echo "Attachment file not found.";
+                }
 
                 // Send email
                 $mail->send();
