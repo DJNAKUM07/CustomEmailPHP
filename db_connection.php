@@ -1,7 +1,7 @@
 <?php
 // Database connection parameters
 $host = 'localhost';
-$dbname = 'customemail';
+$dbname = 'customemailphp';
 $username = 'root';
 $password = '';
 
