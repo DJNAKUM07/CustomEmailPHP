@@ -1,25 +1,24 @@
 <?php
-include 'db_connection.php'; // Include the database connection
+require 'auth.php';
+requireLogin();
+include 'db_connection.php';
 
-if (isset($_POST['id'])) {
-    $templateId = $_POST['id'];
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
+    $id = intval($_POST['id']);
 
     try {
-        // Prepare SQL statement to delete template
         $stmt = $pdo->prepare("DELETE FROM email_templates WHERE id = ?");
-        // Bind parameters
-        $stmt->bindParam(1, $templateId);
-        // Execute the statement
-        $stmt->execute();
+        $stmt->execute([$id]);
 
-        // Send a success response
-        echo "Template deleted successfully!";
+        if ($stmt->rowCount() > 0) {
+            echo 'success';
+        } else {
+            echo 'fail';
+        }
     } catch (PDOException $e) {
-        // Handle the exception if deletion fails
-        echo "Error deleting template: " . $e->getMessage();
+        echo 'fail';
     }
 } else {
-    // Handle case where template ID is not provided
-    echo "Template ID not provided.";
+    echo 'invalid';
 }
 ?>

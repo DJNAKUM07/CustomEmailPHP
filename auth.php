@@ -1,15 +1,16 @@
 <?php
+// auth.php
 
-// session_start();
+session_start();
 
 function isUserLoggedIn() {
     return isset($_SESSION['user_id']);
 }
 
-function redirectToLogin() {
-    header("Location: login.php");
-    exit();
+function requireLogin() {
+    if (!isUserLoggedIn()) {
+        header("Location: login.php");
+        exit();
+    }
 }
-
-
 ?>

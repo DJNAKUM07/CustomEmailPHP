@@ -1,96 +1,145 @@
 <?php
-include 'auth.php'; // Include the isLoggedIn() function
+session_start();
+$success = $_SESSION['success'] ?? '';
+$error = $_SESSION['error'] ?? '';
+unset($_SESSION['success'], $_SESSION['error']);
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>Save Email Template</title>
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="bootstrap.min.css">
-    <!-- SummerNote CSS -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap 4 -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Summernote CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-bs4.min.css" rel="stylesheet">
+
+    <style>
+        body { background-color: #f8f9fa; }
+        .card { margin-top: 2rem; }
+        .alert { margin-top: 1rem; }
+        .form-group label { font-weight: 500; }
+    </style>
 </head>
 <body>
 
-        <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="#"></a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="#">Email System</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto">
-                        <li class="nav-item">
-                            <a class="nav-link active" href="index.php">Template
-                                <span class="visually-hidden">(current)</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="list_credentials.php">Credentials</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="send_email.php">Send Email</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="email_log_list.php">Email Log</a>
-                        </li>
-                    </ul>
-
-                </div>
-            </div>
-        </nav>
-    
-    <div class="m-5">
-        <div class="row">
-            <div class="col-md-10">
-                <h2>Save Email Template</h2>
-            </div>
-            <div class="col-md-2">
-            <a href="index.php" class="btn btn-primary">Back to Template List</a>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link active" href="index.php">Template</a></li>
+                    <li class="nav-item"><a class="nav-link" href="list_credentials.php">Credentials</a></li>
+                    <li class="nav-item"><a class="nav-link" href="send_email.php">Send Email</a></li>
+                    <li class="nav-item"><a class="nav-link" href="email_log_list.php">Email Log</a></li>
+                </ul>
             </div>
         </div>
-        
-        <form action="save_template_process.php" method="post" enctype="multipart/form-data">
-            <div class="form-group">
-                <label for="template_name">Template Name:</label>
-                <input type="text" name="template_name" class="form-control" required>
-            </div>
-            <div class="form-group">
-                <label for="subject">Subject:</label>
-                <input type="text" name="subject" class="form-control" required>
-            </div>
-            <div class="form-group">
-                <label for="editor">Body:</label>
-                <textarea name="body" id="summernote" class="form-control" rows="5" required></textarea>
-            </div>
-            <br/>
-            <div class="form-group">
-                <label for="image">Attachment:</label>
-                <input type="file" name="image" class="form-control-file">
-            </div>
-            <br/>
-            <button type="submit" name="submit" class="btn btn-primary">Save Template</button>
-        </form>
+    </nav>
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">Save Email Template</h2>
+        <a href="index.php" class="btn btn-outline-primary">
+            <i class="fas fa-arrow-left me-1"></i> Back
+        </a>
     </div>
 
-    <!-- jQuery and Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <?php if ($success): ?>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>Success:</strong> <?= htmlspecialchars($success) ?>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span>&times;</span></button>
+        </div>
+    <?php elseif ($error): ?>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Error:</strong> <?= htmlspecialchars($error) ?>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span>&times;</span></button>
+        </div>
+    <?php endif; ?>
 
-    <!-- SummerNote JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-bs4.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('#summernote').summernote({
-                height: 300, // set editor height
-                minHeight: null, // set minimum height of editor
-                maxHeight: null, // set maximum height of editor
-                focus: true // set focus to editable area after initializing summernote
-            });
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form id="templateForm" action="save_template_process.php" method="post" enctype="multipart/form-data" novalidate>
+                <div class="form-group">
+                    <label for="template_name">Template Name</label>
+                    <input type="text" name="template_name" id="template_name" class="form-control" required>
+                    <div class="invalid-feedback">Template name is required.</div>
+                </div>
+
+                <div class="form-group mt-3">
+                    <label for="subject">Subject</label>
+                    <input type="text" name="subject" id="subject" class="form-control" required>
+                    <div class="invalid-feedback">Subject is required.</div>
+                </div>
+
+                <div class="form-group mt-3">
+                    <label for="body">Body</label>
+                    <textarea name="body" id="summernote" class="form-control" required></textarea>
+                    <div class="invalid-feedback" id="bodyError" style="display:none;">Body is required.</div>
+                </div>
+
+                <div class="form-group mt-3">
+                    <label for="image">Attachment (optional)</label>
+                    <input type="file" name="image" id="image" class="form-control-file">
+                </div>
+
+                <button type="submit" name="submit" class="btn btn-primary mt-4">
+                    <i class="fas fa-save me-1"></i> Save Template
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-bs4.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('#summernote').summernote({
+            height: 300,
+            placeholder: 'Write your email body here...',
+            toolbar: [
+                ['style', ['bold', 'italic', 'underline', 'clear']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['insert', ['link', 'picture']],
+                ['view', ['fullscreen', 'codeview']]
+            ]
         });
-    </script>
+
+        // Bootstrap validation + summernote body check
+        $('#templateForm').on('submit', function (e) {
+            let form = this;
+            let isValid = form.checkValidity();
+
+            const bodyContent = $('#summernote').summernote('isEmpty') ? '' : $('#summernote').val();
+            if (!bodyContent || bodyContent.trim() === '') {
+                $('#bodyError').show();
+                isValid = false;
+            } else {
+                $('#bodyError').hide();
+            }
+
+            if (!isValid) {
+                e.preventDefault();
+                e.stopPropagation();
+                $(form).addClass('was-validated');
+            }
+        });
+    });
+</script>
+
 </body>
 </html>
